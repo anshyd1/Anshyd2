@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Caption Studio | Gorakhpur UP 53</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #050508;
+            --card: rgba(255, 255, 255, 0.03);
+            --accent: #00a2ff;
+            --text: #ffffff;
+            --silver: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(0, 162, 255, 0.2);
+        }
+
+        body.light-mode {
+            --bg: #f8faff;
+            --card: #ffffff;
+            --accent: #0066ff;
+            --text: #0f172a;
+            --silver: #64748b;
+            --border: rgba(0, 0, 0, 0.06);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Outfit', sans-serif; transition: background 0.4s; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; width: 100%; }
+
+        /* HEADER */
+        nav { position: fixed; top: 0; width: 100%; height: 80px; background: rgba(5, 5, 8, 0.9); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; z-index: 5000; border-bottom: 1px solid var(--border); }
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .header-info { font-size: 0.65rem; color: var(--silver); font-weight: 800; display: flex; flex-direction: column; }
+        .logo { font-weight: 900; color: var(--accent); font-size: 1.1rem; letter-spacing: 2px; }
+
+        /* SIDEBAR */
+        #sidebar { position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: var(--bg); z-index: 8000; padding: 40px; border-right: 1px solid var(--border); transition: 0.4s ease; }
+        #sidebar.active { left: 0; }
+        #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 7500; display: none; }
+        #sidebar-overlay.active { display: block; }
+
+        /* PAGE STRUCTURE */
+        .page { display: none; width: 100%; max-width: 1200px; margin: 0 auto; padding: 100px 5% 150px; animation: fadeIn 0.5s ease; }
+        .page.active { display: block; }
+        section { margin-bottom: 120px; width: 100%; }
+
+        .section-tag { color: var(--accent); font-weight: 900; font-size: 0.75rem; letter-spacing: 4px; display: block; margin-bottom: 15px; text-transform: uppercase; }
+        h2 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 30px; }
+
+        /* RESULTS / PORTFOLIO */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .glass-card { background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: 30px; transition: 0.3s; position: relative; overflow: hidden; }
+        .work-img { width: 100%; border-radius: 20px; border: 1px solid var(--border); margin-top: 15px; }
+
+        /* PREDICTOR */
+        .predictor-box { background: var(--card); border: 1px solid var(--accent); padding: 40px; border-radius: 35px; text-align: center; }
+        input[type="range"] { width: 100%; accent-color: var(--accent); margin: 25px 0; cursor: pointer; }
+
+        /* TRANSFORMATION */
+        .t-box { padding: 25px; border-radius: 20px; border-left: 5px solid var(--border); background: var(--card); margin-bottom: 20px; }
+
+        /* FAQ */
+        .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 15px; margin-bottom: 15px; padding: 20px; cursor: pointer; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: 0.3s; color: var(--silver); }
+        .faq-item.open .faq-answer { max-height: 200px; margin-top: 15px; }
+
+        /* HOLD ACTION BAR */
+        .hold-action-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(5, 5, 8, 0.95); border-top: 1px solid var(--border); padding: 20px 5%; z-index: 9000; backdrop-filter: blur(20px); }
+        .hold-container { width: 100%; height: 65px; background: var(--card); border-radius: 20px; border: 1px solid var(--border); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .fill-bar { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--accent); opacity: 0.3; transition: width 0.1s linear; }
+
+        .btn-p { background: var(--accent); color: #fff; border: none; padding: 18px; border-radius: 15px; font-weight: 800; width: 100%; cursor: pointer; text-transform: uppercase; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar-overlay" onclick="toggleM()"></div>
+
+    <nav>
+        <div class="nav-left">
+            <i class="fas fa-bars-staggered" onclick="toggleM()" style="cursor:pointer; font-size: 1.4rem;"></i>
+            <div class="header-info">
+                <span>GORAKHPUR UP 53</span>
+                <span id="clock" style="color: var(--accent);">00:00:00</span>
+            </div>
+        </div>
+        <div class="logo" onclick="navTo('home')">CAPTION STUDIO</div>
+        <div onclick="toggleT()"><i class="fas fa-moon" id="t-icon" style="color: var(--accent); cursor:pointer; font-size: 1.4rem;"></i></div>
+    </nav>
+
+    <div id="sidebar">
+        <h2 style="color:var(--accent); margin-bottom: 40px; letter-spacing: 2px;">MENU</h2>
+        <p onclick="navTo('home')" style="margin-bottom: 25px; font-weight: 600; cursor:pointer; font-size: 1.1rem;">The Studio</p>
+        <p onclick="navTo('social')" style="margin-bottom: 25px; font-weight: 600; cursor:pointer; font-size: 1.1rem;">Packages & Pricing</p>
+        <p onclick="navTo('founder')" style="margin-bottom: 25px; font-weight: 600; cursor:pointer; font-size: 1.1rem;">The Founder</p>
+    </div>
+
+    <main id="home" class="page active">
+        
+        <section style="text-align: center; padding: 60px 0;">
+            <h1 style="font-size: clamp(3rem, 10vw, 5.5rem); line-height: 0.9; margin-bottom: 25px; font-weight: 900;">Elite <br><span style="color:var(--accent); -webkit-text-stroke: 1px var(--accent); -webkit-text-fill-color: transparent;">Authority.</span></h1>
+            <p style="color:var(--silver); max-width: 600px; margin: 0 auto 40px;">Hum sirf captions nahi likhte, hum aapke brand ki digital value design karte hain. Gorakhpur's premium agency.</p>
+            <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+                <button onclick="navTo('social')" class="btn-p" style="max-width: 200px;">See Plans</button>
+            </div>
+        </section>
+
+        <section id="results">
+            <span class="section-tag">Case Studies</span>
+            <h2>Verified <span style="color:var(--accent)">Growth.</span></h2>
+            <div class="grid">
+                <div class="glass-card">
+                    <span style="font-size: 0.7rem; color:var(--accent); font-weight: 900;">REACH ANALYSIS</span>
+                    <img src="https://i.ibb.co/jv7SzYqn/Screenshot-2026-02-07-19-08-22-77-99c04817c0de5652397fc8b56c3b3817.jpg" class="work-img">
+                    <h3 style="margin-top: 15px;">Retention Logic</h3>
+                </div>
+                <div class="glass-card">
+                    <span style="font-size: 0.7rem; color:var(--accent); font-weight: 900;">VIRAL HOOKS</span>
+                    <img src="https://i.ibb.co/tM9rbD3j/Screenshot-2026-02-07-19-09-32-65-99c04817c0de5652397fc8b56c3b3817.jpg" class="work-img">
+                    <h3 style="margin-top: 15px;">Engagement Loop</h3>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <span class="section-tag">AI Predictor</span>
+            <h2>How Fast Will You <span style="color:var(--accent)">Grow?</span></h2>
+            <div class="predictor-box">
+                <p>Monthly Reach: <span id="rVal" style="color:var(--accent); font-weight:900;">10,000</span></p>
+                <input type="range" id="rIn" min="1000" max="100000" step="1000" value="10000" oninput="updateP()">
+                <div class="grid" style="margin-top: 30px;">
+                    <div class="glass-card">
+                        <small>EST. GROWTH</small>
+                        <h1 id="res" style="color:#00ff88; margin-top: 10px;">+2,500</h1>
+                    </div>
+                    <div class="glass-card">
+                        <small>AUTHORITY SCORE</small>
+                        <h1 style="color:var(--accent); margin-top: 10px;">9.2/10</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <span class="section-tag">The Studio Effect</span>
+            <h2>Transformation <span style="color:var(--accent)">Logs.</span></h2>
+            <div class="t-box" style="border-left-color: #ff4d4d;">
+                <p style="color:#ff4d4d; font-weight: 900; font-size: 0.7rem; margin-bottom: 5px;">BEFORE CAPTION STUDIO</p>
+                <p>"Check out my new content. Please support and follow."</p>
+                <small style="color:var(--silver)">Reach: 124 | Saves: 2</small>
+            </div>
+            <div class="t-box" style="border-left-color: #00ff88; background: rgba(0, 255, 136, 0.05);">
+                <p style="color:#00ff88; font-weight: 900; font-size: 0.7rem; margin-bottom: 5px;">AFTER CAPTION STUDIO</p>
+                <p>"The 1% of creators aren't smarter than you, they just use this logic..."</p>
+                <small style="color:var(--silver)">Reach: 4.8K | Saves: 310</small>
+            </div>
+        </section>
+
+        <section>
+            <span class="section-tag">FAQ</span>
+            <h2>Got <span style="color:var(--accent)">Questions?</span></h2>
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+                <div style="display:flex; justify-content:space-between; font-weight:800;">
+                    <span>Prices itne affordable kyun hain?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">Hum Gorakhpur UP 53 ke creators ko global quality dena chahte hain taaki har creator elite brand ban sake.</div>
+            </div>
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+                <div style="display:flex; justify-content:space-between; font-weight:800;">
+                    <span>Kya results guarantee hain?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">Hum content psychology use karte hain jo organic reach badhane ke liye proven hai. Hum 100% satisfaction guarantee dete hain.</div>
+            </div>
+        </section>
+    </main>
+
+    <main id="social" class="page">
+        <span class="section-tag">Pricing</span>
+        <h2>Choose Your <span style="color:var(--accent)">Plan.</span></h2>
+        <div class="grid">
+            <div class="glass-card" style="border: 2px solid var(--accent);">
+                <span style="background: var(--accent); color:#fff; padding: 5px 10px; border-radius: 5px; font-size: 0.6rem; font-weight: 900;">MOST POPULAR</span>
+                <h3 style="margin-top: 15px;">Starter Pack</h3>
+                <h1 style="font-size: 3rem; margin: 20px 0;">₹999</h1>
+                <ul style="list-style: none; color:var(--silver); font-size: 0.9rem; line-height: 2;">
+                    <li><i class="fas fa-check" style="color:var(--accent)"></i> 10 Elite Captions</li>
+                    <li><i class="fas fa-check" style="color:var(--accent)"></i> 10 High-Retention Hooks</li>
+                    <li><i class="fas fa-check" style="color:var(--accent)"></i> Profile Branding Audit</li>
+                </ul>
+                <button class="btn-p" style="margin-top: 25px;" onclick="window.open('https://wa.me/919918996096')">Buy Now</button>
+            </div>
+            <div class="glass-card">
+                <h3>Pro Elite</h3>
+                <h1 style="font-size: 3rem; margin: 20px 0;">₹2,499</h1>
+                <ul style="list-style: none; color:var(--silver); font-size: 0.9rem; line-height: 2;">
+                    <li><i class="fas fa-check" style="color:var(--accent)"></i> 25 Elite Captions</li>
+                    <li><i class="fas fa-check" style="color:var(--accent)"></i> Strategy Roadmap</li>
+                    <li><i class="fas fa-check" style="color:var(--accent)"></i> 1-on-1 Branding Call</li>
+                </ul>
+                <button class="btn-p" style="margin-top: 25px;" onclick="window.open('https://wa.me/919918996096')">Select Pro</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="founder" class="page">
+        <div class="glass-card" style="text-align: center; padding: 60px 20px;">
+            <div style="width: 150px; height: 150px; margin: 0 auto 25px; border-radius: 50%; border: 4px solid var(--accent); padding: 5px; overflow: hidden;">
+                <img src="https://i.ibb.co/dwhXTRz6/ansh.jpg" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+            </div>
+            <h2 style="margin-bottom: 10px;">Ansh Yadav</h2>
+            <p style="color:var(--accent); font-weight: 900; letter-spacing: 2px; font-size: 0.8rem; margin-bottom: 20px;">FOUNDER & HEAD STRATEGIST</p>
+            <p style="color:var(--silver); max-width: 500px; margin: 0 auto;">"Transforming normal creators into elite personal brands through the power of words and psychology."</p>
+        </div>
+    </main>
+
+    <div class="hold-action-bar">
+        <div class="hold-container" id="h-btn">
+            <div class="fill-bar" id="f-bar"></div>
+            <span style="z-index: 10; font-size: 0.8rem; font-weight: 900; letter-spacing: 1px;">HOLD TO CONNECT ON WHATSAPP</span>
+        </div>
+    </div>
+
+    <script>
+        function toggleM() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebar-overlay').classList.toggle('active');
+        }
+        function toggleT() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.getElementById('t-icon');
+            icon.className = document.body.classList.contains('light-mode') ? "fas fa-sun" : "fas fa-moon";
+        }
+        function navTo(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(document.getElementById('sidebar').classList.contains('active')) toggleM();
+            window.scrollTo(0,0);
+        }
+        function updateP() {
+            let v = document.getElementById('rIn').value;
+            document.getElementById('rVal').innerText = Number(v).toLocaleString();
+            document.getElementById('res').innerText = "+" + Math.floor(v * 0.25).toLocaleString();
+        }
+        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+
+        // HOLD LOGIC
+        const hBtn = document.getElementById('h-btn'), fBar = document.getElementById('f-bar');
+        let t, p = 0;
+        function start(e) {
+            if(e.cancelable) e.preventDefault();
+            p = 0; t = setInterval(() => {
+                p += 2; fBar.style.width = p + "%";
+                if(p >= 100) { clearInterval(t); window.open("https://wa.me/919918996096", "_blank"); fBar.style.width = "0%"; }
+            }, 20);
+        }
+        function stop() { clearInterval(t); fBar.style.width = "0%"; }
+        hBtn.addEventListener('mousedown', start); hBtn.addEventListener('mouseup', stop);
+        hBtn.addEventListener('touchstart', start); hBtn.addEventListener('touchend', stop);
+    </script>
+</body>
+</html>
