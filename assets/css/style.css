@@ -1,0 +1,41 @@
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#0f1115;
+  color:#ffffff;
+  line-height:1.8;
+}
+
+.container{
+  width:90%;
+  max-width:800px;
+  margin:auto;
+  padding:20px;
+}
+
+.topbar{
+  padding:15px 20px;
+  background:#151922;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.post h1{
+  font-size:42px;
+  line-height:1.2;
+}
+
+.post h2{
+  margin-top:40px;
+  color:#4da3ff;
+}
+
+.post p{
+  font-size:18px;
+}
+
+.footer{
+  padding:40px 20px;
+  text-align:center;
+  opacity:.7;
+}
