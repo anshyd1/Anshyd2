@@ -1,0 +1,33 @@
+---
+layout: default
+title: Mera Blog
+---
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>All Blogs | CaptionStudio</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 5px auto; padding: 20px; }
+        .blog-link { display: block; background: white; padding: 20px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-decoration: none; color: #333; }
+        .blog-link:hover { transform: translateY(-2px); }
+        h2 { margin: 0 0 10px 0; color: #007bff; }
+        p { margin: 0; color: #666; }
+    </style>
+</head>
+<body>
+
+    <h1>Mera Blog Articles</h1>
+    <hr>
+
+    <!-- GitHub automatic aapke saare naye blogs yahan jod dega -->
+    {% for post in site.posts %}
+        <a class="blog-link" href="{{ post.url | relative_url }}">
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.description }}</p>
+            <small style="color: #999;">Published on: {{ post.date | date_to_string }}</small>
+        </a>
+    {% endfor %}
+
+</body>
+</html>
